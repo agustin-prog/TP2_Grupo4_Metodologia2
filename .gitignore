@@ -1,0 +1,15 @@
+# NetBeans / Java
+/build/
+/dist/
+/nbproject/private/
+/nbproject/Makefile-*
+/nbbuild/
+/nbdist/
+
+# Compiled files
+*.class
+*.jar
+
+# IDE / OS
+.DS_Store
+Thumbs.db
