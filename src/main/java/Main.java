@@ -28,6 +28,7 @@ public class Main {
         probarAdapter(args);
         probarTemplate();
         probarRefactoring();
+        probarGestionHeroes(args);
 
         System.out.println("=================================================");
         System.out.println(" FIN DE LAS PRUEBAS INTEGRADORAS");
@@ -105,4 +106,14 @@ public class Main {
         }
         System.out.println();
     }
+
+
+    private static void probarGestionHeroes(String[] args) {
+        System.out.println("--- 5. FACTORY METHOD, SINGLETON Y FACADE (Gestión de héroes) ---");
+
+        patrones.gestionheroes.DemoHeroes.main(args);
+
+        System.out.println();
+    }
+
 }
