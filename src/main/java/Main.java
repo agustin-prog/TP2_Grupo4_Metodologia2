@@ -9,6 +9,12 @@ import patrones.strategy.EstrategiaTransaccion;
 import patrones.strategy.Extraccion;
 import patrones.strategy.Transferencia;
 import patrones.strategy.TransaccionBancaria;
+import patrones.template.Guerrero;
+import patrones.template.Mago;
+import refactoring.HabilidadCuerpoACuerpo;
+import refactoring.HabilidadMagica;
+import refactoring.Personaje;
+import refactoring.Videojuego;
 
 /** Punto de entrada para integrar las demostraciones del TP2. */
 public class Main {
@@ -52,7 +58,6 @@ public class Main {
     private static void probarAdapter(String[] args) {
         System.out.println("--- 2. PATRÓN ADAPTER (Pagos de hotel) ---");
         try {
-            // Ejecuta la demo que ya implementó el equipo Adapter.
             DemoAdapter.main(args);
         } catch (PagoException e) {
             System.out.println("Error al realizar el pago [" + e.getMotivo()
@@ -63,71 +68,41 @@ public class Main {
 
     private static void probarTemplate() {
         System.out.println("--- 3. PATRÓN TEMPLATE METHOD (Combate) ---");
-        try {
-            // Reflexión para que Main no dependa de clases que aún no estén creadas.
-            Class<?> guerreroClass = Class.forName("patrones.template.Guerrero");
-            Class<?> magoClass = Class.forName("patrones.template.Mago");
-            Object guerrero = guerreroClass.getConstructor(String.class, int.class)
-                    .newInstance("Aragorn", 120);
-            Object mago = magoClass.getConstructor(String.class, int.class)
-                    .newInstance("Gandalf", 80);
+        // Las clases que subieron los compañeros reciben únicamente el nombre.
+        Guerrero guerrero = new Guerrero("Aragorn");
+        Mago mago = new Mago("Gandalf");
 
-            System.out.println("Turno del Guerrero:");
-            guerreroClass.getMethod("pelear").invoke(guerrero);
-            System.out.println("\nTurno del Mago:");
-            magoClass.getMethod("pelear").invoke(mago);
-        } catch (ClassNotFoundException e) {
-            System.out.println("No ejecutado: todavía no hay clases de Template Method "
-                    + "disponibles en patrones.template.");
-        } catch (ReflectiveOperationException e) {
-            informarErrorDeIntegracion("Template Method", e);
-        }
-        System.out.println();
+        System.out.println("Turno del Guerrero:");
+        guerrero.pelear();
+        System.out.println("Turno del Mago:");
+        mago.pelear();
     }
 
     private static void probarRefactoring() {
         System.out.println("--- 4. REFACTORING (Polimorfismo en videojuego) ---");
         try {
-            // Se usa reflexión porque las clases refactoring del repositorio están
-            // fuera de src/main/java; así Main sigue compilando sin moverlas.
-            Class<?> habilidadClass = Class.forName("refactoring.Habilidad");
-            Class<?> cuerpoACuerpoClass = Class.forName("refactoring.HabilidadCuerpoACuerpo");
-            Class<?> habilidadMagicaClass = Class.forName("refactoring.HabilidadMagica");
-            Class<?> personajeClass = Class.forName("refactoring.Personaje");
-            Class<?> videojuegoClass = Class.forName("refactoring.Videojuego");
+            Videojuego juego = new Videojuego();
+            Personaje guerrero = new Personaje("Guerrero Feroz", 50.0,
+                    new HabilidadCuerpoACuerpo());
+            Personaje mago = new Personaje("Mago Supremo", 80.0,
+                    new HabilidadMagica());
 
-            Object fisica = cuerpoACuerpoClass.getConstructor().newInstance();
-            Object magia = habilidadMagicaClass.getConstructor().newInstance();
-            Constructor<?> constructorPersonaje = personajeClass.getConstructor(
-                    String.class, double.class, habilidadClass);
-            Object guerrero = constructorPersonaje.newInstance("Guerrero Feroz", 50.0, fisica);
-            Object mago = constructorPersonaje.newInstance("Mago Supremo", 80.0, magia);
-            Object videojuego = videojuegoClass.getConstructor().newInstance();
+            juego.agregarPersonaje(guerrero);
+            juego.agregarPersonaje(mago);
+            juego.imprimirInfo(guerrero);
+            juego.imprimirInfo(mago);
 
-            Method agregar = videojuegoClass.getMethod("agregarPersonaje", personajeClass);
-            agregar.invoke(videojuego, guerrero);
-            agregar.invoke(videojuego, mago);
-            videojuegoClass.getMethod("imprimirInfo", personajeClass).invoke(videojuego, guerrero);
-            videojuegoClass.getMethod("imprimirInfo", personajeClass).invoke(videojuego, mago);
-
-            Object masDanio = videojuegoClass
-                    .getMethod("obtenerPersonajeConMayorDanio").invoke(videojuego);
+            Personaje masDanio = juego.obtenerPersonajeConMayorDanio();
             if (masDanio != null) {
-                String nombre = (String) personajeClass.getMethod("getNombre").invoke(masDanio);
-                System.out.println("Personaje con mayor daño calculado: " + nombre);
+                System.out.println("Personaje con mayor daño calculado: "
+                        + masDanio.getNombre());
             }
-        } catch (ClassNotFoundException e) {
-            System.out.println("No ejecutado: las clases de refactoring no están disponibles "
-                    + "en el classpath actual.");
-        } catch (ReflectiveOperationException e) {
-            informarErrorDeIntegracion("Refactoring", e);
+        } catch (NoClassDefFoundError | ExceptionInInitializerError e) {
+            // En el estado actual del repo, las fuentes refactoring están en
+            // /refactoring y no en el source root configurado: src/main/java.
+            System.out.println("No se pudo cargar refactoring: sus fuentes todavía están "
+                    + "fuera de src/main/java (source root del proyecto).");
         }
         System.out.println();
-    }
-
-    private static void informarErrorDeIntegracion(String modulo, ReflectiveOperationException e) {
-        Throwable causa = e instanceof InvocationTargetException
-                ? ((InvocationTargetException) e).getTargetException() : e;
-        System.out.println("No se pudo ejecutar " + modulo + ": " + causa.getMessage());
     }
 }
