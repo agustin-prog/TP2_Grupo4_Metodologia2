@@ -2,6 +2,7 @@ import java.util.List;
 import patrones.adapter.DemoAdapter;
 import patrones.adapter.PagoException;
 import patrones.gestionheroes.DemoHeroes;
+import patrones.observer.PruebaObserver;
 import patrones.strategy.CuentaBancaria;
 import patrones.strategy.Deposito;
 import patrones.strategy.EstrategiaTransaccion;
@@ -15,7 +16,7 @@ import refactoring.HabilidadMagica;
 import refactoring.Personaje;
 import refactoring.Videojuego;
 
-/** Ejecuta por separado las demostraciones actualmente disponibles. */
+/** Ejecuta por separado las demostraciones de las actividades del TP2. */
 public class Main {
 
     public static void main(String[] args) {
@@ -26,17 +27,17 @@ public class Main {
         ejecutar("Actividad 1 - Strategy: transacciones bancarias", Main::probarStrategy);
         ejecutar("Actividad 2 - Adapter: pagos de hotel", Main::probarAdapter);
         ejecutar("Actividad 3 - Template Method: combate", Main::probarTemplate);
-        System.out.println("\n--- Actividad 4 - Observer ---");
-        System.out.println("Pendiente: todavía no hay implementación Observer en el repositorio.");
+        ejecutar("Actividad 4 - Observer: monitoreo ambiental", Main::probarObserver);
         ejecutar("Actividad 5 - Factory Method, Singleton y Facade: gestión de héroes",
                 Main::probarGestionHeroes);
         ejecutar("Refactoring: polimorfismo de habilidades", Main::probarRefactoring);
 
         System.out.println("\n=================================================");
-        System.out.println(" FIN DE LAS DEMOSTRACIONES DISPONIBLES");
+        System.out.println(" FIN DE LAS DEMOSTRACIONES");
         System.out.println("=================================================");
     }
 
+    /** Evita que una falla en una demostración impida ejecutar las siguientes. */
     private static void ejecutar(String titulo, Runnable demostracion) {
         System.out.println("\n--- " + titulo + " ---");
         try {
@@ -80,6 +81,11 @@ public class Main {
         guerrero.pelear();
         System.out.println("Turno del Mago:");
         mago.pelear();
+    }
+
+    private static void probarObserver() {
+        // PruebaObserver demuestra sensores, vistas, umbrales y suscripciones dinámicas.
+        PruebaObserver.main(new String[0]);
     }
 
     private static void probarGestionHeroes() {
