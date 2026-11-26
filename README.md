@@ -38,10 +38,3 @@ Al ejecutar `Main`, las demostraciones se presentan por separado en la consola. 
 4. Si NetBeans solicita una plataforma Java, selecciona o configura JDK 21.
 5. En el árbol del proyecto, abre **Source Packages > `<default package>` > `Main.java`**.
 6. Haz clic derecho en el proyecto y selecciona **Run**, o ejecuta `Main.java`. El proyecto ya configura `Main` como clase principal.
-
-## Ejecutar otras demos Observer
-
-- **Interfaz gráfica:** ejecuta `patrones.observer.InterfazMonitoreo` como clase principal para abrir la ventana de monitoreo. Requiere un entorno gráfico.
-- **Pruebas de Observer:** ejecuta `patrones.observer.PruebasObserver` como clase principal para correr sus pruebas automáticas en consola.
-
-Las demos Observer indicadas son opcionales; el `Main` grupal ejecuta la prueba de consola `PruebaObserver` como parte del recorrido integrado.
